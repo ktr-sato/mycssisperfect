@@ -86,8 +86,14 @@ body {
     background-size: 200px 200px; /* タイルの大きさ */
     background-repeat: repeat; /* 背景の繰り返しを有効 */
   }
+
+  #gallery {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* スムーズなスクロールを有効にする */
+  }
   
 .gallery-item {
+    flex: 0 0 auto;
     flex-shrink: 0;
     margin-right: 15px; /* アイテム間にスペースを作る */
     background-size: cover;

@@ -1,9 +1,12 @@
 const gallery = document.getElementById('gallery');
 const background = document.querySelector('.gallery-background');
 const galleryItems = document.querySelectorAll('.gallery-item');
+const loader = document.getElementById('loading-screen');
+const endMessage = document.querySelector('.end-message');
 
-// --- 横スクロール制御（PCのみ） ---
+// --- 横スクロール制御（PC：ホイール、モバイル：タッチ） ---
 if (!('ontouchstart' in window)) {
+  // PC向け：ホイールスクロール
   let isScrolling = false;
 
   gallery.addEventListener('wheel', (e) => {
@@ -25,6 +28,27 @@ if (!('ontouchstart' in window)) {
       }, 150);
     }
   }, { passive: false });
+} else {
+  // スマホ向け：タッチスクロール
+  let touchStartX = 0;
+  let isTouching = false;
+
+  gallery.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+    isTouching = true;
+  });
+
+  gallery.addEventListener('touchmove', (e) => {
+    if (!isTouching) return;
+    const touchMoveX = e.touches[0].clientX;
+    const scrollAmount = touchStartX - touchMoveX;
+    gallery.scrollLeft += scrollAmount;
+    touchStartX = touchMoveX;
+  });
+
+  gallery.addEventListener('touchend', () => {
+    isTouching = false;
+  });
 }
 
 // --- スクロール処理最適化 ---
@@ -53,7 +77,6 @@ function applyParallax() {
 
 // --- 画像のフェードイン ---
 function checkVisibility() {
-  const galleryBounds = gallery.getBoundingClientRect();
   galleryItems.forEach((item) => {
     const itemBounds = item.getBoundingClientRect();
     if (itemBounds.right >= 0 && itemBounds.left <= window.innerWidth) {
@@ -62,18 +85,8 @@ function checkVisibility() {
   });
 }
 
-const loader = document.getElementById('loading-screen');
-
-// --- 初期表示時にチェック ---
-// ページの読み込み完了後にローディング画面を非表示にする
+// --- ページ読み込み＆画像プリロード＆ローディング非表示 ---
 window.addEventListener('load', () => {
-    // // ローディング画面を非表示にする
-    // setTimeout(() => {
-    //     // ローディング画面を非表示にする
-    //     const loadingScreen = document.getElementById('loading-screen');
-    //     loadingScreen.classList.add('hidden');
-    //   }, 2500);
-      // 画像をプリロードするコード
   const imagesToPreload = [
     './img/DSC02015.JPG',
     './img/DSC02016.JPG',
@@ -109,24 +122,22 @@ window.addEventListener('load', () => {
     });
   });
 
-  Promise.all(promises)
+  // 最低3秒はローディングを表示
+  const delay = new Promise(resolve => setTimeout(resolve, 3000));
+
+  Promise.all([...promises, delay])
     .then(() => {
       loader.style.display = 'none'; // ローディング画面を非表示に
+      applyParallax();
+      checkVisibility();
     })
     .catch((error) => {
       console.error(error);
     });
-  
-    // 既存の関数を実行（パララックスや画像の表示チェックなど）
-    applyParallax();
-    checkVisibility();
-  });
-  
+});
 
-const endMessage = document.querySelector('.end-message');
-
+// --- 最後の画像到達でメッセージ表示 ---
 gallery.addEventListener('scroll', () => {
-  // 既存の checkVisibility(); の下などに追記
   const scrollLeft = gallery.scrollLeft;
   const maxScrollLeft = gallery.scrollWidth - gallery.clientWidth;
 
