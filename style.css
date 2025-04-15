@@ -1,0 +1,86 @@
+/* スクロールバーを完全に隠す */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden; /* 縦横両方のスクロールバーを隠す */
+}
+
+body {
+    font-family: sans-serif;
+    background-color: #f0f0f0;
+}
+
+/* ギャラリーコンテナに背景を追加（アニメーションを除去） */
+.gallery-container {
+    display: flex;
+    flex-wrap: nowrap;
+    height: 100vh; /* 高さをビューポートに合わせる */
+    width: 100vw;  /* 幅をビューポートに合わせる */
+    overflow: hidden; /* スクロールバーを隠す */
+    scroll-behavior: smooth; /* スクロールのスムーズ化 */
+    padding: 0;
+    margin: 0;
+    position: relative;
+    background: url('./img/grain_background.png') no-repeat center center; /* アニメーションを外し静止した背景 */
+    background-size: cover; /* 背景画像をカバーサイズに */
+    /* z-index: -2; */
+}
+
+.gallery-item {
+    flex-shrink: 0;
+    margin-right: 15px; /* アイテム間にスペースを作る */
+    background-size: cover;
+    background-position: center;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.large {
+    width: 100vw; /* 幅をビューポートに合わせる */
+    height: 100vh; /* 高さをビューポートに合わせる */
+}
+
+.small {
+    width: 40vw;  /* 小さい画像は40%の幅に */
+    height: 60vh; /* 小さい画像は60%の高さに */
+    margin-top: 20vh; /* 上下の余白を追加 */
+}
+
+.long {
+    width: 20vw;  /* 幅を40%に */
+    height: 80vh; /* 高さを80%に */
+    margin-top: 10vh; /* 上下の余白を追加 */
+}
+
+.middle {
+    width: 60vw;  /* 幅を40%に */
+    height: 60vh; /* 高さを80%に */
+    margin-top: 10vh; /* 上下の余白を追加 */
+}
+
+@media screen and (max-width: 768px) {
+    .large {
+        width: 180vw; /* 幅をビューポートに合わせる */
+        height: 100vh; /* 高さをビューポートに合わせる */
+    }
+
+    .small {
+        width: 80vw;  /* 小さい画像は40%の幅に */
+        height: 60vh; /* 小さい画像は60%の高さに */
+        margin-top: 20vh; /* 上下の余白を追加 */
+    }
+    
+    .long {
+        width: 80vw;  /* 幅を40%に */
+        height: 80vh; /* 高さを80%に */
+        margin-top: 10vh; /* 上下の余白を追加 */
+    }
+    
+    .middle {
+        width: 60vw;  /* 幅を40%に */
+        height: 60vh; /* 高さを80%に */
+        margin-top: 10vh; /* 上下の余白を追加 */
+    }
+    
+}
