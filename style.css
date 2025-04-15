@@ -11,6 +11,43 @@ body {
     background-color: #f0f0f0;
 }
 
+/* ローディング画面 */
+#loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+  }
+  
+  .loader {
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #3498db;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 2s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  /* ギャラリーが表示される時のローディング画面の非表示 */
+  #loading-screen.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+  
+
 /* ギャラリーコンテナに背景を追加（アニメーションを除去） */
 .gallery-container {
     display: flex;
@@ -33,6 +70,23 @@ body {
     scrollbar-width: none;     /* Firefox */
   }
 
+/* 背景設定 */
+.gallery-background {
+    position: fixed; /* 固定位置で表示 */
+    top: 0;
+    left: 0;
+    height: 100%; /* 背景の高さをビューポートに合わせる */
+    width: 200%; /* 背景を2倍の幅にしてスクロールに合わせる */
+    z-index: -1; /* コンテンツより後ろに表示 */
+    background-image: conic-gradient(
+      from 45deg,
+      #ff69b6 0deg 25%,  /* ピンク */
+      #56a5fa 25deg 50%  /* 水色 */
+    );
+    background-size: 200px 200px; /* タイルの大きさ */
+    background-repeat: repeat; /* 背景の繰り返しを有効 */
+  }
+  
 .gallery-item {
     flex-shrink: 0;
     margin-right: 15px; /* アイテム間にスペースを作る */
@@ -40,7 +94,13 @@ body {
     background-position: center;
     border-radius: 0;
     box-shadow: none;
-}
+    opacity: 0; /* 最初は透明 */
+    transition: opacity 1s ease-in-out; /* フェードインのアニメーション */
+  }
+  
+  .gallery-item.visible {
+    opacity: 1; /* visible クラスが付いた時に不透明 */
+  }
 
 .large {
     width: 100vw; /* 幅をビューポートに合わせる */
@@ -51,18 +111,21 @@ body {
     width: 40vw;  /* 小さい画像は40%の幅に */
     height: 60vh; /* 小さい画像は60%の高さに */
     margin-top: 20vh; /* 上下の余白を追加 */
+    border-radius: 12px;
 }
 
 .long {
     width: 20vw;  /* 幅を40%に */
     height: 80vh; /* 高さを80%に */
     margin-top: 10vh; /* 上下の余白を追加 */
+    border-radius: 12px;
 }
 
 .middle {
     width: 60vw;  /* 幅を40%に */
     height: 60vh; /* 高さを80%に */
     margin-top: 10vh; /* 上下の余白を追加 */
+    border-radius: 12px;
 }
 
 .scroll-indicator {
@@ -97,6 +160,83 @@ body {
     80% { opacity: 1; }
     100% { opacity: 0; display: none; }
   }
+
+  /* 全体スタイル */
+.gallery-container {
+    display: flex;
+    flex-wrap: nowrap;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  /* 画像のフェードイン（scrollのタイミング） */
+  .gallery-item {
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+  }
+  
+  .gallery-item.visible {
+    opacity: 1;
+  }
+  
+  .typography-text {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    width: calc(100vw - 40px); /* 左右の余白確保 */
+    font-size: clamp(1rem, 3.5vw, 2rem); /* 以前より一回り小さく */
+    font-weight: 900;
+    color: #111;
+    letter-spacing: -0.08em; /* さらに詰める */
+    line-height: 1.1;
+    z-index: 1000;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: 'Arial', sans-serif;
+    opacity: 1;
+    transition: none;
+    text-align: left;
+  }
+  
+  .typography-text h1 {
+    letter-spacing: -2px; /* もっと詰める */
+    margin: 0;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: 1.05;
+  }
+  
+  .typography-text p {
+    font-weight: 700;
+    letter-spacing: -1px;
+    margin: 2px 0 0 0;
+    font-size: 0.75em;
+  }
+  
+  .end-message {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    background: rgba(255, 255, 255, 0.8);
+    color: #111;
+    font-weight: bold;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+    z-index: 1000;
+  }
+  
+  .end-message.visible {
+    opacity: 1;
+  }
+  
+  
+  
   
 
 @media screen and (max-width: 768px) {
