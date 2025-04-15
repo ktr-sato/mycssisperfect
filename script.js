@@ -28,27 +28,6 @@ if (!('ontouchstart' in window)) {
       }, 150);
     }
   }, { passive: false });
-} else {
-  // スマホ向け：タッチスクロール
-  let touchStartX = 0;
-  let isTouching = false;
-
-  gallery.addEventListener('touchstart', (e) => {
-    touchStartX = e.touches[0].clientX;
-    isTouching = true;
-  });
-
-  gallery.addEventListener('touchmove', (e) => {
-    if (!isTouching) return;
-    const touchMoveX = e.touches[0].clientX;
-    const scrollAmount = touchStartX - touchMoveX;
-    gallery.scrollLeft += scrollAmount;
-    touchStartX = touchMoveX;
-  });
-
-  gallery.addEventListener('touchend', () => {
-    isTouching = false;
-  });
 }
 
 // --- スクロール処理最適化 ---
@@ -122,8 +101,8 @@ window.addEventListener('load', () => {
     });
   });
 
-  // 最低3秒はローディングを表示
-  const delay = new Promise(resolve => setTimeout(resolve, 3000));
+  // 最低2秒はローディングを表示
+  const delay = new Promise(resolve => setTimeout(resolve, 2000));
 
   Promise.all([...promises, delay])
     .then(() => {

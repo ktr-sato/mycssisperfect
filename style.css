@@ -3,7 +3,8 @@ html, body {
     margin: 0;
     padding: 0;
     height: 100%;
-    overflow: hidden; /* 縦横両方のスクロールバーを隠す */
+    overflow: auto; /* ← これにすることでスクロールが可能に */
+    -webkit-overflow-scrolling: touch; /* iOS対応 */
 }
 
 body {
@@ -54,12 +55,14 @@ body {
     flex-wrap: nowrap;
     height: 100vh; /* 高さをビューポートに合わせる */
     width: 100vw;  /* 幅をビューポートに合わせる */
-    overflow-x: scroll; /* スクロールバーを隠す */
+    overflow-x: auto; /* スクロールバーを隠す */
     overflow-y: hidden; 
     scroll-behavior: smooth; /* スクロールのスムーズ化 */
     padding: 0;
     margin: 0;
     position: relative;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
 }
 
 .gallery-container::-webkit-scrollbar {
