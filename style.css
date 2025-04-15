@@ -65,6 +65,40 @@ body {
     margin-top: 10vh; /* 上下の余白を追加 */
 }
 
+.scroll-indicator {
+    position: fixed;
+    bottom: 20px;
+    right: 30px;
+    background: rgba(255, 255, 255, 0.7);
+    padding: 10px 16px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #444;
+    z-index: 1000;
+    animation: fadeOut 6s ease-out forwards;
+  }
+  
+  .scroll-indicator .arrow {
+    animation: moveArrow 1s infinite;
+    font-size: 18px;
+  }
+  
+  @keyframes moveArrow {
+    0% { transform: translateX(0); }
+    50% { transform: translateX(5px); }
+    100% { transform: translateX(0); }
+  }
+  
+  @keyframes fadeOut {
+    0% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { opacity: 0; display: none; }
+  }
+  
+
 @media screen and (max-width: 768px) {
     .large {
         width: 180vw; /* 幅をビューポートに合わせる */
