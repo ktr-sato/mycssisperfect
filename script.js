@@ -4,30 +4,52 @@ const galleryItems = document.querySelectorAll('.gallery-item');
 const loader = document.getElementById('loading-screen');
 const endMessage = document.querySelector('.end-message');
 
-// --- 横スクロール制御（PC：ホイール、モバイル：タッチ） ---
-if (!('ontouchstart' in window)) {
-  // PC向け：ホイールスクロール
-  let isScrolling = false;
+function setRealVh() {
+  const vh = window.innerHeight * 0.01;
+  document.documentElement.style.setProperty('--vh', `${vh}px`);
+}
 
+window.addEventListener('resize', setRealVh);
+window.addEventListener('load', setRealVh);
+
+// --- 慣性スクロール（PC用） ---
+let targetScroll = 0;
+let currentScroll = 0;
+let isAnimating = false;
+
+if (!('ontouchstart' in window)) {
   gallery.addEventListener('wheel', (e) => {
     e.preventDefault();
-    if (!isScrolling) {
-      isScrolling = true;
-      const scrollAmount = e.deltaY > 0 ? 1 : -1;
-      const currentScroll = gallery.scrollLeft;
-      const scrollWidth = gallery.scrollWidth;
-      const galleryWidth = gallery.clientWidth;
-      let newScrollPosition = currentScroll + scrollAmount * galleryWidth;
+    const delta = e.deltaY;
+    const maxScroll = gallery.scrollWidth - gallery.clientWidth;
 
-      newScrollPosition = Math.max(0, Math.min(newScrollPosition, scrollWidth - galleryWidth));
+    targetScroll += delta;
+    targetScroll = Math.max(0, Math.min(targetScroll, maxScroll));
 
-      gallery.scrollTo({ left: newScrollPosition, behavior: 'smooth' });
-
-      setTimeout(() => {
-        isScrolling = false;
-      }, 150);
+    if (!isAnimating) {
+      isAnimating = true;
+      smoothScroll();
     }
   }, { passive: false });
+}
+
+function smoothScroll() {
+  const easing = 0.05;
+  const loop = () => {
+    const diff = targetScroll - currentScroll;
+    currentScroll += diff * easing;
+
+    gallery.scrollLeft = currentScroll;
+
+    if (Math.abs(diff) > 0.5) {
+      requestAnimationFrame(loop);
+    } else {
+      currentScroll = targetScroll;
+      gallery.scrollLeft = targetScroll;
+      isAnimating = false;
+    }
+  };
+  loop();
 }
 
 // --- スクロール処理最適化 ---

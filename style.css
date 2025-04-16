@@ -1,275 +1,302 @@
 /* スクロールバーを完全に隠す */
-html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    overflow: auto; /* ← これにすることでスクロールが可能に */
-    -webkit-overflow-scrolling: touch; /* iOS対応 */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: auto;
+  /* ← これにすることでスクロールが可能に */
+  -webkit-overflow-scrolling: touch;
+  /* iOS対応 */
 }
 
 body {
-    font-family: sans-serif;
-    background-color: #f0f0f0;
+  font-family: sans-serif;
+  background-color: #f0f0f0;
 }
 
 /* ローディング画面 */
 #loading-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(255, 255, 255, 0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    opacity: 1;
-    transition: opacity 0.5s ease;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+
+.loader {
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #3498db;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
   }
-  
-  .loader {
-    border: 8px solid #f3f3f3;
-    border-top: 8px solid #3498db;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    animation: spin 2s linear infinite;
+
+  100% {
+    transform: rotate(360deg);
   }
-  
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-  
-  /* ギャラリーが表示される時のローディング画面の非表示 */
-  #loading-screen.hidden {
-    opacity: 0;
-    pointer-events: none;
-  }
-  
+}
+
+/* ギャラリーが表示される時のローディング画面の非表示 */
+#loading-screen.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
 
 /* ギャラリーコンテナに背景を追加（アニメーションを除去） */
 .gallery-container {
-    display: flex;
-    flex-wrap: nowrap;
-    height: 100vh; /* 高さをビューポートに合わせる */
-    width: 100vw;  /* 幅をビューポートに合わせる */
-    overflow-x: auto; /* スクロールバーを隠す */
-    overflow-y: hidden; 
-    scroll-behavior: smooth; /* スクロールのスムーズ化 */
-    padding: 0;
-    margin: 0;
-    position: relative;
-    -webkit-overflow-scrolling: touch;
-    scroll-behavior: smooth;
+  overflow-x: auto;
+  /* スクロールバーを隠す */
+  overflow-y: hidden;
+  /* スクロールのスムーズ化 */
+  padding: 0;
+  margin: 0;
+  -webkit-overflow-scrolling: touch;
+  display: flex;
+  flex-wrap: nowrap;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  position: relative;
+  -ms-overflow-style: none;
+  /* IE, Edge */
+  scrollbar-width: none;
+  /* Firefox */
 }
 
 .gallery-container::-webkit-scrollbar {
-    display: none; /* Chrome, Safari */
-  }
-  .gallery-container {
-    -ms-overflow-style: none;  /* IE, Edge */
-    scrollbar-width: none;     /* Firefox */
-  }
+  display: none;
+  /* Chrome, Safari */
+}
 
 /* 背景設定 */
 .gallery-background {
-    position: fixed; /* 固定位置で表示 */
-    top: 0;
-    left: 0;
-    height: 100%; /* 背景の高さをビューポートに合わせる */
-    width: 200%; /* 背景を2倍の幅にしてスクロールに合わせる */
-    z-index: -1; /* コンテンツより後ろに表示 */
-    background-image: conic-gradient(
-      from 45deg,
-      #ff69b6 0deg 25%,  /* ピンク */
-      #56a5fa 25deg 50%  /* 水色 */
+  position: fixed;
+  /* 固定位置で表示 */
+  top: 0;
+  left: 0;
+  height: 100%;
+  /* 背景の高さをビューポートに合わせる */
+  width: 200%;
+  /* 背景を2倍の幅にしてスクロールに合わせる */
+  z-index: -1;
+  /* コンテンツより後ろに表示 */
+  background-image: conic-gradient(from 45deg,
+      #ff69b6 0deg 25%,
+      /* ピンク */
+      #56a5fa 25deg 50%
+      /* 水色 */
     );
-    background-size: 200px 200px; /* タイルの大きさ */
-    background-repeat: repeat; /* 背景の繰り返しを有効 */
-  }
+  background-size: 200px 200px;
+  /* タイルの大きさ */
+  background-repeat: repeat;
+  /* 背景の繰り返しを有効 */
+}
 
-  #gallery {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch; /* スムーズなスクロールを有効にする */
-  }
-  
+#gallery {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  /* スムーズなスクロールを有効にする */
+}
+
+/* 画像のフェードイン（scrollのタイミング） */
 .gallery-item {
-    flex: 0 0 auto;
-    flex-shrink: 0;
-    margin-right: 15px; /* アイテム間にスペースを作る */
-    background-size: cover;
-    background-position: center;
-    border-radius: 0;
-    box-shadow: none;
-    opacity: 0; /* 最初は透明 */
-    transition: opacity 1s ease-in-out; /* フェードインのアニメーション */
-  }
-  
-  .gallery-item.visible {
-    opacity: 1; /* visible クラスが付いた時に不透明 */
-  }
+  flex: 0 0 auto;
+  flex-shrink: 0;
+  margin-right: 15px;
+  /* アイテム間にスペースを作る */
+  background-size: cover;
+  background-position: center;
+  border-radius: 0;
+  box-shadow: none;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+.gallery-item.visible {
+  opacity: 1;
+}
 
 .large {
-    width: 100vw; /* 幅をビューポートに合わせる */
-    height: 100vh; /* 高さをビューポートに合わせる */
+  width: 100vw;
+  /* 幅をビューポートに合わせる */
+  height: 100vh;
+  /* 高さをビューポートに合わせる */
 }
 
 .small {
-    width: 40vw;  /* 小さい画像は40%の幅に */
-    height: 60vh; /* 小さい画像は60%の高さに */
-    margin-top: 20vh; /* 上下の余白を追加 */
-    border-radius: 12px;
+  width: 40vw;
+  /* 小さい画像は40%の幅に */
+  height: 60vh;
+  /* 小さい画像は60%の高さに */
+  margin-top: 20vh;
+  /* 上下の余白を追加 */
+  border-radius: 12px;
 }
 
 .long {
-    width: 20vw;  /* 幅を40%に */
-    height: 80vh; /* 高さを80%に */
-    margin-top: 10vh; /* 上下の余白を追加 */
-    border-radius: 12px;
+  width: 20vw;
+  /* 幅を40%に */
+  height: 80vh;
+  /* 高さを80%に */
+  margin-top: 10vh;
+  /* 上下の余白を追加 */
+  border-radius: 12px;
 }
 
 .middle {
-    width: 60vw;  /* 幅を40%に */
-    height: 60vh; /* 高さを80%に */
-    margin-top: 10vh; /* 上下の余白を追加 */
-    border-radius: 12px;
+  width: 60vw;
+  /* 幅を40%に */
+  height: 60vh;
+  /* 高さを80%に */
+  margin-top: 10vh;
+  /* 上下の余白を追加 */
+  border-radius: 12px;
 }
 
 .scroll-indicator {
-    position: fixed;
-    bottom: 20px;
-    right: 30px;
-    background: rgba(255, 255, 255, 0.7);
-    padding: 10px 16px;
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-    color: #444;
-    z-index: 1000;
-    animation: fadeOut 6s ease-out forwards;
-  }
-  
-  .scroll-indicator .arrow {
-    animation: moveArrow 1s infinite;
-    font-size: 18px;
-  }
-  
-  @keyframes moveArrow {
-    0% { transform: translateX(0); }
-    50% { transform: translateX(5px); }
-    100% { transform: translateX(0); }
-  }
-  
-  @keyframes fadeOut {
-    0% { opacity: 1; }
-    80% { opacity: 1; }
-    100% { opacity: 0; display: none; }
+  position: fixed;
+  bottom: 20px;
+  right: 30px;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 10px 16px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #444;
+  z-index: 1000;
+  animation: fadeOut 10s ease-out forwards;
+}
+
+.scroll-indicator .arrow {
+  animation: moveArrow 1s infinite;
+  font-size: 18px;
+}
+
+@keyframes moveArrow {
+  0% {
+    transform: translateX(0);
   }
 
-  /* 全体スタイル */
-.gallery-container {
-    display: flex;
-    flex-wrap: nowrap;
-    height: 100vh;
-    width: 100vw;
-    overflow: hidden;
-    position: relative;
+  50% {
+    transform: translateX(5px);
   }
-  
-  /* 画像のフェードイン（scrollのタイミング） */
-  .gallery-item {
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+
+  80% {
+    opacity: 1;
+  }
+
+  100% {
     opacity: 0;
-    transition: opacity 1s ease-in-out;
+    display: none;
   }
-  
-  .gallery-item.visible {
-    opacity: 1;
-  }
-  
-  .typography-text {
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    width: calc(100vw - 40px); /* 左右の余白確保 */
-    font-size: clamp(1rem, 3.5vw, 2rem); /* 以前より一回り小さく */
-    font-weight: 900;
-    color: #111;
-    letter-spacing: -0.08em; /* さらに詰める */
-    line-height: 1.1;
-    z-index: 1000;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-family: 'Arial', sans-serif;
-    opacity: 1;
-    transition: none;
-    text-align: left;
-  }
-  
-  .typography-text h1 {
-    letter-spacing: -2px; /* もっと詰める */
-    margin: 0;
-    font-size: inherit;
-    font-weight: inherit;
-    line-height: 1.05;
-  }
-  
-  .typography-text p {
-    font-weight: 700;
-    letter-spacing: -1px;
-    margin: 2px 0 0 0;
-    font-size: 0.75em;
-  }
-  
-  .end-message {
-    position: fixed;
-    bottom: 40px;
-    right: 40px;
-    background: rgba(255, 255, 255, 0.8);
-    color: #111;
-    font-weight: bold;
-    padding: 1rem 2rem;
-    border-radius: 8px;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.5s ease;
-    z-index: 1000;
-  }
-  
-  .end-message.visible {
-    opacity: 1;
-  }
-  
-  
-  
-  
+}
+
+.typography-text {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  width: calc(100vw - 40px);
+  font-size: clamp(1rem, 3.5vw, 2rem);
+  font-weight: 900;
+  color: #111;
+  letter-spacing: -0.08em;
+  line-height: 1.1;
+  z-index: 1000;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: 'Arial', sans-serif;
+  opacity: 1;
+  transition: none;
+  text-align: left;
+}
+
+.typography-text h1 {
+  letter-spacing: -2px;
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: 1.05;
+}
+
+.typography-text p {
+  font-weight: 700;
+  letter-spacing: -1px;
+  margin: 2px 0 0 0;
+  font-size: 0.75em;
+}
+
+.end-message {
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  background: rgba(255, 255, 255, 0.8);
+  color: #111;
+  font-weight: bold;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+  z-index: 1000;
+}
+
+.end-message.visible {
+  opacity: 1;
+}
 
 @media screen and (max-width: 768px) {
-    .large {
-        width: 180vw; /* 幅をビューポートに合わせる */
-        height: 100vh; /* 高さをビューポートに合わせる */
-    }
+  .gallery-container {
+    height: calc(var(--vh, 1vh) * 100);
+  }
 
-    .small {
-        width: 80vw;  /* 小さい画像は40%の幅に */
-        height: 60vh; /* 小さい画像は60%の高さに */
-        margin-top: 20vh; /* 上下の余白を追加 */
-    }
-    
-    .long {
-        width: 80vw;  /* 幅を40%に */
-        height: 80vh; /* 高さを80%に */
-        margin-top: 10vh; /* 上下の余白を追加 */
-    }
-    
-    .middle {
-        width: 60vw;  /* 幅を40%に */
-        height: 60vh; /* 高さを80%に */
-        margin-top: 10vh; /* 上下の余白を追加 */
-    }
-    
+  .large {
+    width: 180vw;
+    height: calc(var(--vh, 1vh) * 100);
+  }
+
+  .small {
+    width: 80vw;
+    height: 60vh;
+    margin-top: 20vh;
+  }
+
+  .long {
+    width: 80vw;
+    height: 80vh;
+    margin-top: 10vh;
+  }
+
+  .middle {
+    width: 60vw;
+    height: 60vh;
+    margin-top: 10vh;
+  }
 }
