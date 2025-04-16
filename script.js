@@ -79,6 +79,8 @@ function applyParallax() {
 // --- 画像のフェードイン ---
 function checkVisibility() {
   galleryItems.forEach((item) => {
+    if (item.classList.contains('visible')) return;
+    
     const itemBounds = item.getBoundingClientRect();
     if (itemBounds.right >= 0 && itemBounds.left <= window.innerWidth) {
       item.classList.add('visible');
