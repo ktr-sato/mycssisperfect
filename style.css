@@ -284,19 +284,19 @@ body {
 
   .small {
     width: 80vw;
-    height: 60vh;
+    height: calc(var(--vh, 1vh) * 60);
     margin-top: 20vh;
   }
 
   .long {
-    width: 80vw;
-    height: 70vh;
+    width: 70vw;
     margin-top: 10vh;
+    height: calc(var(--vh, 1vh) * 80); /* ← 80vhではなく、カスタムvhを使う */
   }
 
   .middle {
     width: 100vw;
-    height: 60vh;
+    height: calc(var(--vh, 1vh) * 60);
     margin-top: 10vh;
   }
 }
