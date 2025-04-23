@@ -71,7 +71,7 @@ gallery.addEventListener('scroll', onScroll);
 // --- パララックス効果 ---
 function applyParallax() {
   const scrollPosition = gallery.scrollLeft;
-  const parallaxSpeed = 0.3;
+  const parallaxSpeed = 0.1;
   const newBackgroundPosition = -scrollPosition * parallaxSpeed;
   background.style.backgroundPosition = `${newBackgroundPosition}px 0`;
 }
@@ -125,8 +125,8 @@ window.addEventListener('load', () => {
     });
   });
 
-  // 最低2秒はローディングを表示
-  const delay = new Promise(resolve => setTimeout(resolve, 2000));
+  // 最低1.8秒はローディングを表示
+  const delay = new Promise(resolve => setTimeout(resolve, 1800));
 
   Promise.all([...promises, delay])
     .then(() => {
@@ -150,3 +150,72 @@ gallery.addEventListener('scroll', () => {
     endMessage.classList.remove('visible');
   }
 });
+
+// ライトボックス機能
+const lightboxOverlay = document.getElementById('lightbox-overlay');
+const lightboxImage = document.getElementById('lightbox-image');
+const closeButton = document.querySelector('.close-button');
+
+// すべてのギャラリーアイテムにクリックイベントを追加
+galleryItems.forEach(item => {
+  item.addEventListener('click', function() {
+    // スクロールを一時停止
+    document.body.style.overflow = 'hidden';
+    
+    // 背景画像のURLを取得
+    const backgroundImage = window.getComputedStyle(this).backgroundImage;
+    // url("...") から実際のURLを抽出
+    const imageUrl = backgroundImage.replace(/^url\(['"](.+)['"]\)$/, '$1');
+    
+    // ライトボックス画像にURLをセット
+    lightboxImage.src = imageUrl;
+    
+    // ライトボックスを表示
+    lightboxOverlay.style.display = 'flex';
+    
+    // アニメーション効果（オプショナル）
+    lightboxOverlay.style.opacity = 0;
+    setTimeout(() => {
+      lightboxOverlay.style.opacity = 1;
+    }, 10);
+  });
+});
+
+// 閉じるボタンのイベント
+closeButton.addEventListener('click', closeLightbox);
+
+// オーバーレイをクリックしても閉じる
+lightboxOverlay.addEventListener('click', function(e) {
+  // 画像自体のクリックは無視（画像以外をクリックした場合のみ閉じる）
+  if (e.target === lightboxOverlay) {
+    closeLightbox();
+  }
+});
+
+// ESCキーを押しても閉じる
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' && lightboxOverlay.style.display === 'flex') {
+    closeLightbox();
+  }
+});
+
+// ライトボックスを閉じる関数
+function closeLightbox() {
+  lightboxOverlay.style.opacity = 0;
+  
+  // フェードアウト後に非表示に
+  setTimeout(() => {
+    lightboxOverlay.style.display = 'none';
+    // スクロールを再開
+    document.body.style.overflow = 'auto';
+  }, 300);
+}
+
+// トランジションのためのCSSを動的に追加
+const style = document.createElement('style');
+style.innerHTML = `
+  .lightbox-overlay {
+    transition: opacity 0.3s ease;
+  }
+`;
+document.head.appendChild(style);
