@@ -95,7 +95,6 @@ window.addEventListener('load', () => {
     './img/DSC02016.JPG',
     './img/DSC02017.JPG',
     './img/DSC02018.JPG',
-    "./img/DSC02018.JPG",
     "./img/DSC02023.JPG",
     "./img/DSC02029.JPG",
     "./img/DSC02032.JPG",

@@ -255,17 +255,22 @@ body {
 
 .end-message {
   position: fixed;
-  bottom: 40px;
-  right: 40px;
-  background: rgba(255, 255, 255, 0.8);
+  bottom: 10px;
+  right: 10px;
+  /* background: rgba(255, 255, 255, 0.8); */
   color: #111;
-  font-weight: bold;
-  padding: 1rem 2rem;
-  border-radius: 8px;
+  font-weight: 900; /* 700から900に変更 */
+  /* padding: 1rem 2rem;
+  border-radius: 8px; */
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.5s ease;
   z-index: 1000;
+  font-family: 'Arial', sans-serif; /* タイトルと同じフォント */
+  letter-spacing: -1px; /* タイトルと同じレターススペーシング */
+  line-height: 1.1; /* タイトルと同じラインハイト */
+  font-size: clamp(1rem, 3.5vw, 2rem);
+  text-align: right;
 }
 
 .end-message.visible {
